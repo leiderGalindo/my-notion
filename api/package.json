@@ -1,0 +1,29 @@
+{
+  "name": "api-my-notion",
+  "version": "1.0.0",
+  "description": "Esta es la api del proyecto de my notion el cual esta desarrollado el api con nodeJS y el front con react",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "expess",
+    "mysql"
+  ],
+  "author": "Leider Galindo",
+  "license": "MIT",
+  "devDependencies": {
+    "standard": "^17.1.2"
+  },
+  "dependencies": {
+    "bcrypt": "5.1.1",
+    "cookie-parser": "1.4.7",
+    "cors": "2.8.5",
+    "express": "4.21.2",
+    "jsonwebtoken": "9.0.2",
+    "mysql2": "^3.12.0",
+    "zod": "^3.24.2"
+  }
+}
