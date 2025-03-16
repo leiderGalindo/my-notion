@@ -1,29 +1,27 @@
 import z from 'zod'
 
 const userShema = z.object({
-  username: z.array(
-    z.string().min(3),
+  username: z.string(
     {
       required_error: 'Username is required',
       invalid_type_error: 'Username must be a string'
     }
-  ),
-  email: z.array(
-    z.string().email(),
+  ).min(3),
+  email: z.string(
     {
       required_error: 'Email is required',
       invalid_type_error: 'Invalid email address'
     }
-  ),
-  password: z.array(
-    z.string().min(8),
+  ).email(),
+  password: z.string(
     {
       required_error: 'Password is required',
       invalid_type_error: 'Password must be a string'
     }
-  ),
-  created_at: z.string().datetime(),
-  updated_at: z.string().datetime()
+  ).min(8),
+  profile_image_url: z.string().url({
+    invalid_type_error: "Movie poster must be a valid url",
+  }),
 })
 
 /*
@@ -32,4 +30,8 @@ const userShema = z.object({
 */
 export function validateUser(object){
   return userShema.safeParse(object)
+}
+
+export function validatePartialUser(object){
+  return userShema.partial().safeParse(object)
 }

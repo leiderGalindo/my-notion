@@ -15,12 +15,12 @@ app.disable('x-powered-by')
 app.use(corsMiddleware())
 
 // Routes
-app.use('/', (req, res) => {
+app.get('/', (req, res) => {
   res.send('Hello world!')
 })
 
 // Rutas de usuario
-app,use('user', createUserRoutes())
+app.use('/user', createUserRoutes())
 
 // Levantamos el sevidor en el puerto especificado
 app.listen(PORT, () => {
