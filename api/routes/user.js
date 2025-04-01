@@ -8,6 +8,7 @@ export const createUserRoutes = () => {
   userRoutes.post('/login', UserController.login)
   userRoutes.get('/logout', UserController.logout)
   userRoutes.post('/recover_password', UserController.recoverPassword)
+  userRoutes.patch('/:id', UserController.updatedUser) 
 
   return userRoutes
 }

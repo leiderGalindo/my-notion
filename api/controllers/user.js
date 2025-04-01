@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { sendEmail } from '../controllers/sendEmail.js'
 import { UserModel } from '../models/user.js'
 import { validatePartialUser } from '../shemas/user.js'
 import { JWT, NODE_ENV } from '../configuration.js'
@@ -69,7 +70,7 @@ export class UserController {
         token 
       })
     }catch(error){
-      res.status(400).send(error.message)
+      res.status(400).send({error:error.message})
     }
   }
   
@@ -78,6 +79,58 @@ export class UserController {
   }
 
   static recoverPassword = async (req, res) => {
-    
+    const result = validatePartialUser(req.body)
+    if(result.error){
+      return res.status(400).json({ error: JSON.parse(result.error.message) })
+    }
+
+    try{
+      const { email } = result.data
+
+      // Validamos que el email existe
+      const user = await UserModel.getByEmail({ email })
+      if(!user) throw new Error('Email does not exist')
+
+      const templateEmail = `
+        <h1>Recuperacion de contraseña</h1>
+        <p>Hola ${user.username}, para recuperar tu contraseña, haz click en el siguiente link:</p>
+        <a href="http://localhost:3977/recover_password/${user.id}">Recuperar contraseña</a>
+      `
+
+      // Enviamos un email con el link de recuperacion de la contraseña
+      const responseEmail = await sendEmail({
+        to: user.email,
+        subject: 'Recuperacion de contraseña',
+        html: templateEmail,
+      })
+
+      // Validamos la respuesta del envio del email
+      if(typeof responseEmail.messageId === undefined){
+        throw new Error('Email not sent')
+      }
+      
+      res.status(200).send({message: 'Email sent'})
+    }catch(error){
+      res.status(400).send({error: error.message})
+    }
   }
-}
+
+  static updatedUser = async (req, res) => {
+    // Validamos los datos resividos del usuario
+    const result = validatePartialUser(req.body)
+    if(result.error){
+      return res.status(400).json({ error: JSON.parse(result.error.message) })
+    }
+
+    try {
+      const { id } = req.params
+      const updateUser = await UserModel.update({ id, input: result.data })
+
+      if(!updateUser) throw new Error('User not found')
+
+      res.status(200).json({ user: updateUser })
+    } catch (error) {
+      res.status(400).send(error.message)
+    }
+  }
+} 

@@ -15,4 +15,10 @@ export const {
     EXPIRES_IN: process.env.JWT_EXPIRES_IN
   },
   NODE_ENV = process.env.NODE_ENV || 'development',
+  EMAIL = {
+    HOST: (process.env.HOST_EMAIL || 'smtp.gmail.com'),
+    PORT: (process.env.PORT_EMAIL || 465),
+    USER: (process.env.USER_EMAIL || ''),
+    PASSWORD: (process.env.PASSWORD_EMAIL || ''),
+  }
 } = process.env
